@@ -1,0 +1,40 @@
+{
+    "name": "@local/lib",
+    "version": "0.0.0",
+    "main": "index.js",
+    "files": [
+        "index.js"
+    ],
+    "scripts": {
+        "build": "esbuild src/index.js --bundle --format=cjs --outfile=index.js --loader:.js=jsx --external:react --external:react-dom --external:@types/react --external:@types/react-dom",
+
+        "postinstall": "npx typesync",
+        "uninstall": "bash ./scripts/uninstall.sh",
+        "reinstall": "bash ./scripts/reinstall.sh",
+        "example-uninstall": "bash ./scripts/example-uninstall.sh",
+        "example-install": "bash ./scripts/example-install.sh",
+        "example-reinstall": "bash ./scripts/example-reinstall.sh",
+        "example-start": "bash ./scripts/example-start.sh",
+
+        "release": "bash ./scripts/release.sh",
+        "release-patch": "bash ./scripts/release.sh patch",
+        "release-minor": "bash ./scripts/release.sh minor",
+        "release-major": "bash ./scripts/release.sh major"
+    },
+    "repository": {
+        "type": "git",
+        "url": "www.github.com",
+        "directory": "lib"
+    },
+    "description": "Example of a React library",
+    "license": "ISC",
+    "peerDependencies": {
+        "@types/react": "^18.3.3",
+        "@types/react-dom": "^18.3.0",
+        "react": "^18.3.1",
+        "react-dom": "^18.3.1"
+    },
+    "devDependencies": {
+        "esbuild": "^0.23.0"
+    }
+}

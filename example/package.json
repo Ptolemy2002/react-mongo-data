@@ -1,0 +1,46 @@
+{
+  "name": "example",
+  "version": "0.1.0",
+  "private": true,
+  "repository": {
+        "type": "git",
+        "url": "www.github.com",
+        "directory": "example"
+  },
+  "dependencies": {
+    "@local/lib": "file:../lib",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "ajv": "^8.17.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-scripts": "^5.0.1"
+  },
+  "scripts": {
+    "postinstall": "npx typesync",
+    "uninstall": "bash ./scripts/uninstall.sh",
+    "reinstall": "bash ./scripts/reinstall.sh",
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
