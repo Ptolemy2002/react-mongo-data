@@ -3,18 +3,21 @@
   "version": "0.1.0",
   "private": true,
   "repository": {
-        "type": "git",
-        "url": "www.github.com",
-        "directory": "example"
+    "type": "git",
+    "url": "www.github.com",
+    "directory": "example"
   },
   "dependencies": {
-    "@local/lib": "file:../lib",
+    "@ptolemy2002/react-mongo-data": "file:../lib",
+    "@ptolemy2002/react-proxy-context": "^1.0.5",
+    "@ptolemy2002/regex-utils": "^1.1.0",
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
     "ajv": "^8.17.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "zod": "^3.23.8"
   },
   "scripts": {
     "postinstall": "npx typesync",
