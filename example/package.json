@@ -4,7 +4,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "www.github.com",
+    "url": "https://github.com/Ptolemy2002/react-mongo-data",
     "directory": "example"
   },
   "dependencies": {
