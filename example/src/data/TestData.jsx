@@ -109,7 +109,7 @@ export default class TestData extends MongoData {
     }
 }
 
-const TestContext = createProxyContext(TestData);
+const TestContext = createProxyContext(undefined, "TestData");
 TestData.Context = TestContext;
 
 function useTestContext(deps=TestData.defaultDependencies) {
