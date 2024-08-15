@@ -113,7 +113,7 @@ const TestContext = createProxyContext(undefined, "TestData");
 TestData.Context = TestContext;
 
 function useTestContext(deps=TestData.defaultDependencies) {
-    return MongoData.useContext(TestContext, deps);
+    return MongoData.useContext(TestContext, TestData, deps);
 }
 TestData.useContext = useTestContext;
 
