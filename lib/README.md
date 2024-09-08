@@ -91,11 +91,11 @@ In addition, every time a property or requestType is defined, an object property
         - `mongoName` (String): The name of the property in the MongoDB database.
     - Returns:
         - String - The name of the property in the instance that corresponds to the specified name in the MongoDB database.
-- `isDirty` - Returns `true` if any of the defined properties have been changed since the last checkpoint of the specified type, `false` otherwise.
+- `isDirty` - Returns `true` if any of the defined properties have been changed since the last checkpoint of the specified type, `false` otherwise. If the checkpoint is not found, the function will return `true`.
     - Arguments:
-        - `type` (String | String[] | null): The type of checkpoint to compare against. If `null`, the last checkpoint will be used. If the type is an array, the last checkpoint of any of the specified types will be used.
+        - `type` (String | String[] | null): The type of checkpoint to compare against. If `null`, the last checkpoint will be used. If the type is an array, the last checkpoint of any of the specified types will be used. The search will start from the current checkpoint.
     - Returns:
-        - Boolean - `true` if any of the defined properties have been changed since the last checkpoint of the specified type, `false` otherwise.
+        - Boolean - `true` if any of the defined properties have been changed since the last checkpoint of the specified type, `false` otherwise. If the checkpoint is not found, the function will return `true`.
 - `toJSON` - Returns an object that represents the instance in JSON format. This will include all properties that have been defined and their values, converted with the `toMongo` functions if they exist.
     - Arguments: None
     - Returns:
@@ -113,7 +113,7 @@ In addition, every time a property or requestType is defined, an object property
 - `difference` - Calculates the difference between the current state of the instance and the state it was at the last checkpoint of the specified type or the state represented by the `previous` argument if specified. The return value is formatted to be provided directly to MongoDB's `update` method to update the document.
     - Arguments:
         - `args` (Object): An object containing the arguments
-            - `type` (String | String[] | null): The type of checkpoint to compare against. If `null`, the last checkpoint will be used. If the type is an array, the last checkpoint of any of the specified types will be used.
+            - `type` (String | String[] | null): The type of checkpoint to compare against. If `null`, the last checkpoint will be used. If the type is an array, the last checkpoint of any of the specified types will be used. The search will start from the current checkpoint.
             - `previous` (Object): An object that represents the instance in JSON format. If provided, the difference will be calculated between the current state of the instance and the state represented by this object and the `type` argument will be ignored.
     - Returns:
         - Object - An object that represents the difference between the current state of the instance and the state it was at the last checkpoint of the specified type or the state represented by the `previous` argument if specified.
