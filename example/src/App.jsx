@@ -1,9 +1,12 @@
+import { useRef } from "react";
 import TestData from "src/data/TestData";
 
 function App() {
+    const proxyRef = useRef();
+
     return (
         <div className="App">
-            <TestData.Provider value={{}}>
+            <TestData.Provider value={{}} proxyRef={proxyRef}>
                 <h1>Test Data</h1>
                 <Display />
                 <Controller />
