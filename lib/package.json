@@ -41,6 +41,7 @@
         "@ptolemy2002/list-object-utils": "^1.2.3",
         "@ptolemy2002/react-hook-result": "^1.0.2",
         "@ptolemy2002/react-proxy-context": "^1.0.5",
+        "@ptolemy2002/react-utils": "^1.1.1",
         "is-callable": "^1.2.7"
     }
 }
