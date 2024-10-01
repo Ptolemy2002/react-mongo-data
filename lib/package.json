@@ -1,6 +1,6 @@
 {
     "name": "@ptolemy2002/react-mongo-data",
-    "version": "1.3.12",
+    "version": "1.3.13",
     "main": "index.js",
     "files": [
         "index.js"
@@ -41,7 +41,7 @@
         "@ptolemy2002/list-object-utils": "^1.2.3",
         "@ptolemy2002/react-hook-result": "^1.0.2",
         "@ptolemy2002/react-proxy-context": "^1.0.5",
-        "@ptolemy2002/react-utils": "^1.1.1",
+        "@ptolemy2002/react-utils": "^2.0.0",
         "is-callable": "^1.2.7"
     }
 }
