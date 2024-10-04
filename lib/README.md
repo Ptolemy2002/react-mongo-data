@@ -197,7 +197,7 @@ In addition, every time a property or requestType is defined, an object property
     - Arguments:
         - `id` (String): The id of the request type to be removed.
     - Returns: The same instance you called the method on.
-- `request` - Allows you to manually run the request with the specified id instead of directly calling the generated property's value. Throws an `Error` if the request type is not defined.
+- `request` - Allows you to manually run the request with the specified id instead of directly calling the generated property's value. Throws an `Error` if the request type is not defined. If the request fails, any changes to the instance made during that request will be reverted.
     - Arguments:
         - `id` (String): The id of the request type to run.
         - `...args` (Any[]): The arguments to pass to the request type's `run` function. Note that one additional argument will always be provided, an `AbortController` instance for use with handling cancellation.
