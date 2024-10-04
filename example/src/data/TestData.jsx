@@ -90,7 +90,7 @@ export default class TestData extends MongoData {
             initial: { a: 1, b: 2, c: 3 }
         });
 
-        this.defineRequestType("testRequest", async () => {
+        this.defineRequestType("testRequest", async function () {
             await new Promise(resolve => setTimeout(resolve, 1000));
             this.number++;
             console.log("run-testRequest", this.number);
@@ -100,10 +100,11 @@ export default class TestData extends MongoData {
             post: () => console.log("post-testRequest")
         });
 
-        this.defineRequestType("testRequestWithError", async () => {
+        this.defineRequestType("testRequestWithError", async function() {
             await new Promise(resolve => setTimeout(resolve, 1000));
             this.number++;
             console.log("run-testRequestWithError", this.number);
+            await new Promise(resolve => setTimeout(resolve, 1000));
             throw new Error("testRequestWithError");
         }, {
             pre: () => console.log("pre-testRequestWithError"),
