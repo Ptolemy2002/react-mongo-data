@@ -103,6 +103,7 @@ export default class TestData extends MongoData {
         this.defineRequestType("testRequestWithError", async () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
             this.number++;
+            console.log("run-testRequestWithError", this.number);
             throw new Error("testRequestWithError");
         }, {
             pre: () => console.log("pre-testRequestWithError"),
