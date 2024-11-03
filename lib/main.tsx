@@ -133,11 +133,11 @@ export default class MongoData<
     _setReadOnly = false;
 
     // When overriding this, include keys of the DataType as well.
-    protected static defaultDependencies: (keyof MongoData<any, any, any>)[] = [
+    protected static _defaultDependencies: (keyof MongoData<any, any, any>)[] = [
         "requestInProgress", "requestFailed", "requestAborted", "requestError", "checkpointIndex"
     ];
 
-    protected static useContext<
+    protected static _useContext<
         DataType extends DataTypeRecord,
         MongoType extends MongoTypeRecord,
         Requests extends RequestRecord,
@@ -145,7 +145,7 @@ export default class MongoData<
     >(
         context: ProxyContext<MD | null>,
         dataClass: new () => MD,
-        deps: Dependency<MD>[] | null = MongoData.defaultDependencies as unknown as Dependency<MD | null>[],
+        deps: Dependency<MD>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD | null>[],
         onChangeProp?: OnChangePropCallback<MD>,
         onChangeReinit?: OnChangeReinitCallback<MD>,
         listenReinit = true

@@ -40,12 +40,11 @@ export type TestRequests = {
 
 export type CompletedTestData = CompletedMongoData<TestDataType, TestMongoType, TestRequests>;
 
-// @ts-expect-error
 export default class TestData extends MongoData<TestDataType, TestMongoType, TestRequests> {
     _customProperty = "";
 
     static defaultDependencies: Dependency<CompletedTestData>[] = [
-        ...MongoData.defaultDependencies,
+        ...MongoData._defaultDependencies,
         "wildcard",
         "readOnly",
         "customProperty",
@@ -73,7 +72,7 @@ export default class TestData extends MongoData<TestDataType, TestMongoType, Tes
         onChangeProp?: OnChangePropCallback<CompletedTestData>,
         onChangeReinit?: OnChangeReinitCallback<CompletedTestData>
     ) {
-        return MongoData.useContext<
+        return MongoData._useContext<
             TestDataType, TestMongoType, TestRequests, CompletedTestData
         >(
             TestData.Context,

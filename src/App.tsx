@@ -18,7 +18,10 @@ function App() {
 export default App;
 
 function Display() {
-    const [testData] = TestData.useContext();
+    const [_testData] = TestData.useContext();
+    // Remove the null case, as it doesn't apply here.
+    const testData = _testData!;
+
     (window as any).testData = testData;    
 
     return (
@@ -28,27 +31,29 @@ function Display() {
             </p>
 
             <h3>Current</h3>
-            <pre>{JSON.stringify(testData!.toJSON(), null, 2)}</pre>
+            <pre>{JSON.stringify(testData.toJSON(), null, 2)}</pre>
 
             <h3>Difference</h3>
-            <pre>{JSON.stringify(testData!.difference(), null, 2)}</pre>
+            <pre>{JSON.stringify(testData.difference(), null, 2)}</pre>
 
             <h3>Stats</h3>
             <p>
-                Dirty: {testData!.isDirty() ? "Yes" : "No"}
+                Dirty: {testData.isDirty() ? "Yes" : "No"}
             </p>
         </div>
     );
 }
 
 function Controller() {
-    const [testData] = TestData.useContext();
+    const [_testData] = TestData.useContext();
+    // Remove the null case, as it doesn't apply here.
+    const testData = _testData!;
 
     return (
         <div>
-            <button onClick={() => testData!.checkpoint()}>Checkpoint</button>
-            <button onClick={() => testData!.undo()}>Undo</button>
-            <button onClick={() => testData!.redo()}>Redo</button>
+            <button onClick={() => testData.checkpoint()}>Checkpoint</button>
+            <button onClick={() => testData.undo()}>Undo</button>
+            <button onClick={() => testData.redo()}>Redo</button>
         </div>
     );
 }
