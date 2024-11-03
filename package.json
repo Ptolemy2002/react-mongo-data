@@ -1,0 +1,79 @@
+{
+  "name": "@ptolemy2002/react-mongo-data",
+  "private": false,
+  "version": "1.5.3",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Ptolemy2002/react-mongo-data"
+  },
+  "scripts": {
+    "dev": "npm run build && vite --port 3000",
+    "build": "tsc -b ./tsconfig.lib.json && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "postinstall": "npx typesync",
+    "uninstall": "bash ./scripts/uninstall.sh",
+    "reinstall": "bash ./scripts/reinstall.sh",
+    "release": "bash ./scripts/release.sh",
+    "release-patch": "bash ./scripts/release.sh patch",
+    "release-minor": "bash ./scripts/release.sh minor",
+    "release-major": "bash ./scripts/release.sh major"
+  },
+  "peerDependencies": {
+    "@ptolemy2002/js-utils": "^3.0.2",
+    "@ptolemy2002/list-object-utils": "^2.0.0",
+    "@ptolemy2002/react-hook-result": "^2.2.1",
+    "@ptolemy2002/react-proxy-context": "^2.0.1",
+    "@ptolemy2002/react-utils": "^3.0.0",
+    "@ptolemy2002/ts-utils": "^1.0.0",
+    "is-callable": "^1.2.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.11.1",
+    "@ptolemy2002/js-utils": "^3.0.2",
+    "@ptolemy2002/list-object-utils": "^2.0.0",
+    "@ptolemy2002/react-hook-result": "^2.2.1",
+    "@ptolemy2002/react-proxy-context": "^2.0.1",
+    "@ptolemy2002/react-utils": "^3.0.0",
+    "@ptolemy2002/regex-utils": "^2.0.0",
+    "@ptolemy2002/ts-utils": "^1.0.0",
+    "@types/babel__generator": "^7.6.8",
+    "@types/babel__template": "^7.4.4",
+    "@types/babel__traverse": "^7.20.6",
+    "@types/eslint__js": "~8.42.3",
+    "@types/is-callable": "~1.1.2",
+    "@types/less": "~3.0.6",
+    "@types/node": "^22.7.4",
+    "@types/prop-types": "^15.7.13",
+    "@types/react": "^18.3.10",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.2",
+    "eslint": "^9.11.1",
+    "eslint-plugin-react": "^7.37.1",
+    "eslint-plugin-react-hooks": "^5.1.0-rc.0",
+    "eslint-plugin-react-refresh": "^0.4.12",
+    "globals": "^15.9.0",
+    "is-callable": "^1.2.7",
+    "less": "^4.2.0",
+    "path": "^0.12.7",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "typescript": "^5.5.3",
+    "typescript-eslint": "^8.7.0",
+    "vite": "^5.4.8",
+    "vite-plugin-dts": "^4.2.3",
+    "zod": "^3.23.8"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/lib/main.d.ts",
+      "default": "./dist/main.js"
+    }
+  },
+  "files": [
+    "dist"
+  ]
+}

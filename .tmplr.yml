@@ -1,0 +1,87 @@
+steps:
+  - read: remote_owner
+    from: git.remote_owner
+    fallback:
+      from: env.TMPLR_GIT_USER
+      
+  - read: project_name
+    prompt: "Project name"
+    choices:
+      - From file:
+          from: filesystem.rootdir
+      - Custom:
+          prompt: "Enter project name:"
+          default:
+            from: filesystem.rootdir
+  - read: package_id
+    prompt: "Package ID"
+    choices:
+      - From file:
+          eval: "{{ filesystem.rootdir | kebab-case }}"
+      - From project name:
+          eval: "{{ project_name | kebab-case }}"
+      - Custom:
+          prompt: "Enter package ID:"
+          default:
+            eval: "{{ project_name | kebab-case }}"
+
+  - read: workspace_name
+    prompt: "Workspace name"
+    choices:
+      - From git username:
+          from: remote_owner
+      - Custom:
+          prompt: "Enter workspace name:"
+          default:
+            from: remote_owner
+      - None: ""
+  
+  - if: workspace_name
+    read: package_identifier
+    eval: "@{{ workspace_name | kebab-case }}/{{ package_id }}"
+    else:
+      read: package_identifier
+      eval: "{{ package_id }}"
+
+  - read: repository_url
+    prompt: "Git URL"
+    choices:
+      - From git:
+          eval: "https://github.com/{{ remote_owner }}/{{ package_id }}"
+      - Custom:
+          steps:
+            - read: custom_remote_owner
+              prompt: "Git Owner"
+              default:
+                from: remote_owner
+            - read: custom_package_id
+              prompt: "Git Repository Name"
+              default:
+                from: package_id
+          eval: "https://github.com/{{ custom_remote_owner }}/{{ custom_package_id }}"
+
+  - degit: Ptolemy2002/npm-bash-scripts/general
+    to:
+      path: "{{ tmpdir.scripts }}/general"
+  - degit: Ptolemy2002/npm-bash-scripts/for-lib
+    to:
+      path: "{{ tmpdir.scripts }}/for-lib"
+  
+  - copy:
+      path: "{{ tmpdir.scripts }}/general/**/*.*"
+    to: "scripts"
+  - copy:
+      path: "{{ tmpdir.scripts }}/for-lib/**/*.*"
+    to: "scripts"
+
+  - update: "README.md"
+  - update: "package.json"
+  - update: "index.html"
+  - update: "lib/**/*.tsx"
+  - update: "lib/**/*.ts"
+  - update: "src/**/*.tsx"
+  - update: "src/**/*.ts"
+  - update: "src/**/*.less"
+  - remove: "package-lock.json"
+  - remove: "dist"
+  - remove: "node_modules"
