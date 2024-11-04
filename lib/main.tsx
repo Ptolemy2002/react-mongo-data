@@ -289,8 +289,8 @@ export default class MongoData<
         equals = MongoData.comparePropertyValues,
         validate = () => true
     }: Omit<
-        PartialBy<Property<DataType, MongoType, DK, MK>, 
-            "name" | "get" | "set" | "equals" |
+        PartialBy<Omit<Property<DataType, MongoType, DK, MK>, "name">, 
+            "get" | "set" | "equals" |
             "validate" | "readOnly"
         >, "current"
     >) {
