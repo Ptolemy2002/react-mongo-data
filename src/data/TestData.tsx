@@ -73,14 +73,14 @@ export default class TestData extends MongoData<TestDataType, TestMongoType, Tes
         onChangeReinit?: OnChangeReinitCallback<CompletedTestData>
     ) {
         return MongoData._useContext<
-            TestDataType, TestMongoType, TestRequests, CompletedTestData
+            TestDataType, TestMongoType, TestRequests, TestData & CompletedTestData
         >(
-            TestData.Context,
-            TestData as unknown as new () => CompletedTestData,
+            TestData.Context as any, // Helps us preserve values defined by this class itself
+            TestData as unknown as new () => TestData & CompletedTestData,
             deps,
             onChangeProp,
             onChangeReinit
-        );
+        )
     }
 
     // We use this create method instead of a constructor to allow for
