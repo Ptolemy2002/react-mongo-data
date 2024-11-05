@@ -85,7 +85,8 @@ export type MongoDataProviderProps<
     value: MD | Partial<MongoType> | null,
     proxyRef?: MutableRefObject<MD | null>,
     onChangeProp?: OnChangePropCallback<MD | null>,
-    onChangeReinit?: OnChangeReinitCallback<MD | null>
+    onChangeReinit?: OnChangeReinitCallback<MD | null>,
+    renderDeps?: any[]
 } : never;
 
 export type CompletedMongoData<
@@ -194,6 +195,7 @@ export default class MongoData<
             proxyRef,
             onChangeProp,
             onChangeReinit,
+            renderDeps
         }: MongoDataProviderProps<MD>) => {
             const valueRef = useRef<MD | null | undefined>();
             useImperativeHandle(proxyRef, () => valueRef.current!, [valueRef]);
@@ -212,6 +214,7 @@ export default class MongoData<
                     onChangeProp={onChangeProp}
                     onChangeReinit={onChangeReinit}
                     proxyRef={valueRef as MutableRefObject<MD | null>}
+                    renderDeps={renderDeps}
                 >
                     {children}
                 </Provider>
