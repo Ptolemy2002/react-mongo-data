@@ -79,21 +79,22 @@ export type Difference = {
 };
 
 export type MongoDataProviderProps<
-    MD extends MongoData<any, any, any>,
-> = MD extends MongoData<any, infer MongoType, any> ? {
+    MT extends MongoTypeRecord,
+    MD extends MongoData<any, MT, any>,
+> = {
     children: ReactNode,
-    value: MD | Partial<MongoType> | null,
+    value: MD | Partial<MT> | null,
     proxyRef?: MutableRefObject<MD | null>,
     onChangeProp?: OnChangePropCallback<MD | null>,
     onChangeReinit?: OnChangeReinitCallback<MD | null>,
     renderDeps?: any[]
-} : never;
+};
 
 export type CompletedMongoData<
     DataType extends DataTypeRecord,
     MongoType extends MongoTypeRecord,
     Requests extends RequestRecord
-> = DataType & Requests & MongoData<DataType, MongoType, Requests>;
+> = MongoData<DataType, MongoType, Requests> & DataType & Requests;
 
 export default class MongoData<
     DataType extends DataTypeRecord,
@@ -196,7 +197,7 @@ export default class MongoData<
             onChangeProp,
             onChangeReinit,
             renderDeps
-        }: MongoDataProviderProps<MD>) => {
+        }: MongoDataProviderProps<MongoType, MD>) => {
             const valueRef = useRef<MD | null | undefined>();
             useImperativeHandle(proxyRef, () => valueRef.current!, [valueRef]);
 
