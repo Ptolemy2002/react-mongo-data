@@ -83,7 +83,7 @@ export type MongoDataProviderProps<
 > = MD extends MongoData<any, infer MongoType, any> ? {
     children: ReactNode,
     value: MD | Partial<MongoType> | null,
-    proxyRef: MutableRefObject<MD | null>,
+    proxyRef?: MutableRefObject<MD | null>,
     onChangeProp?: OnChangePropCallback<MD | null>,
     onChangeReinit?: OnChangeReinitCallback<MD | null>
 } : never;
