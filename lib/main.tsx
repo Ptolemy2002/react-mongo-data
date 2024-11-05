@@ -455,7 +455,7 @@ export default class MongoData<
     // We need to reassign the same prop to a clone of the object.
     updateProp<K extends Extract<keyof DataType, string>>(
         name: K,
-        value: MaybeTransformer<DataType[K], [DataType[K]]>,
+        value: MaybeTransformer<DataType[K], [DataType[K]]> | ((value: DataType[K]) => void),
         setReadOnly = false
     ): DataType[K] {
         try {
