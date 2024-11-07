@@ -220,7 +220,10 @@ export default class MongoData<
                     {children}
                 </Provider>
             );
-        }, ["children", "proxyRef"]);
+        }, 
+            ["children", "proxyRef"],
+            "MongoData.ProviderWrapper"
+        );
     }
 
 

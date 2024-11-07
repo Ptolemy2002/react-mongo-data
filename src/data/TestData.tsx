@@ -75,7 +75,7 @@ export default class TestData extends MongoData<TestDataType, TestMongoType, Tes
         return MongoData._useContext<
             TestDataType, TestMongoType, TestRequests, CompletedTestData
         >(
-            TestData.Context as any, // Helps us preserve values defined by this class itself
+            TestData.Context, // Helps us preserve values defined by this class itself
             TestData as unknown as new () => CompletedTestData,
             deps,
             onChangeProp,

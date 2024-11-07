@@ -3,16 +3,104 @@ This library contains a class that was originally written to interact with a Mon
 
 Once the instance is created, it supports data validation, tracking of previous states, and loading. When a request is started, a promise is returned, but you may choose to ignore this and access the request variables that will tell you the status. The class also automatically creates an `AbortController` to allow cancellation at any time.
 
-It is not recommended to use the class itself, but to create a subclass that registers all necessary properties on instantiation and defines a `creatFromJSON` static method for construction. [This](https://github.com/Ptolemy2002/react-mongo-data/blob/master/example/src/data/TestData.jsx) is an example of implementation.
+It is not recommended to use the class itself, but to create a subclass that registers all necessary properties on instantiation and defines a `create` static method for construction. [This](https://github.com/Ptolemy2002/react-mongo-data/blob/master/src/data/TestData.tsx) is an example of implementation.
 
 Methods and properties beginning with an underscore are effectively private and thus not documented here.
 
 The class is exported as default, so you can import it in one of the following ways:
-```
+```javascript
 // ES6
 import MongoData from '@ptolemy2002/react-mongo-data';
 // CommonJS
 const MongoData = require('@ptolemy2002/react-mongo-data');
+```
+
+## Type Reference
+```typescript
+type SupportedMongoValue = (
+    string | number | boolean | null | SupportedMongoValue[]
+    | { [key: string]: SupportedMongoValue }
+);
+
+type SupportedDataValue = Exclude<
+        SupportedMongoValue, any[] | { [key: string]: SupportedMongoValue }
+    > | Date | SupportedDataValue[] | Set<SupportedDataValue> | { [key: string]: SupportedDataValue }
+;
+
+type Checkpoint<T> = {
+    type: string,
+    data: T
+};
+
+type CheckpointIndexOptions = { start?: number | null, includeCurrent?: boolean };
+type CheckpointCountOptions = { max?: number, min?: number };
+
+type DataTypeRecord = Record<string, SupportedDataValue>;
+type MongoTypeRecord = Record<string, SupportedMongoValue>;
+type RequestRecord = Record<string, (...args: any[]) => Promise<any>>;
+
+type Property<
+    DataType extends DataTypeRecord,
+    MongoType extends MongoTypeRecord,
+    Name extends Extract<keyof DataType, string> = Extract<keyof DataType, string>,
+    MongoName extends Extract<keyof MongoType, string> = Extract<keyof MongoType, string>
+> = {
+    name: Name,
+    mongoName: MongoName,
+    current: DataType[Name],
+    fromMongo: (value: MongoType[MongoName]) => DataType[Name],
+    toMongo: (value: DataType[Name]) => MongoType[MongoName],
+    initial: DataType[Name],
+    get: (current: DataType[Name]) => DataType[Name],
+    set: (value: DataType[Name]) => DataType[Name],
+    readOnly: boolean,
+    equals: (a: DataType[Name], b: DataType[Name]) => boolean,
+    validate: (value: DataType[Name]) => boolean | string | string[]
+};
+
+type Request<
+    Requests extends RequestRecord,
+    Id extends Extract<keyof Requests, string> = Extract<keyof Requests, string>
+> =
+    Requests[Id] extends ((...args: any[]) => Promise<infer ReturnType>) ? {
+        id: Id,
+        run: (ac: AbortController, ...args: Parameters<Requests[Id]>) => MaybePromise<ReturnType>,
+        pre: (ac: AbortController, ...args: Parameters<Requests[Id]>) => MaybePromise<void>,
+        post:
+            (
+                ac: AbortController,
+                result: ReturnType,
+                ...args: Parameters<Requests[Id]>
+            ) => MaybePromise<void>
+    } : never
+;
+
+type RequestTypeCondition<Requests extends RequestRecord> = ValueCondition<Extract<keyof Requests, string>>;
+
+type Difference = {
+    $set?: { [key: string]: SupportedMongoValue },
+    $unset?: { [key: string]: "" },
+    $push?: { [key: string]: { $each: SupportedMongoValue[] } },
+    $pullAll?: { [key: string]: { $in: SupportedMongoValue[] } }
+};
+
+type MongoDataProviderProps<
+    MT extends MongoTypeRecord,
+    MD extends MongoData<any, MT, any>,
+> = {
+    children: ReactNode,
+    value: MD | Partial<MT> | null,
+    proxyRef?: MutableRefObject<MD | null>,
+    onChangeProp?: OnChangePropCallback<MD | null>,
+    onChangeReinit?: OnChangeReinitCallback<MD | null>,
+    renderDeps?: any[]
+};
+
+type CompletedMongoData<
+    DataType extends DataTypeRecord,
+    MongoType extends MongoTypeRecord,
+    Requests extends RequestRecord
+> = MongoData<DataType, MongoType, Requests> & DataType & Requests;
 ```
 
 ## Classes
