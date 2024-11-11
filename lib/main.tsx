@@ -13,8 +13,6 @@ import { partialMemo } from "@ptolemy2002/react-utils";
 
 loadExtension("hasProperty", ext_hasProperty, Object);
 
-export type RequestRecord = Record<string, (...args: any[]) => Promise<any>>;
-
 export type SupportedMongoValue = (
     string | number | boolean | null | SupportedMongoValue[]
     | { [key: string]: SupportedMongoValue }
@@ -33,6 +31,7 @@ export type CheckpointCountOptions = { max?: number, min?: number };
 
 export type DataTypeRecord = Record<string, SupportedDataValue>;
 export type MongoTypeRecord = Record<string, SupportedMongoValue>;
+export type RequestRecord = Record<string, (...args: any[]) => Promise<any>>;
 
 export type Property<
     DataType extends DataTypeRecord,
@@ -148,8 +147,8 @@ export default class MongoData<
         context: ProxyContext<MD | null>,
         dataClass: new () => MD,
         deps: Dependency<MD>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD | null>[],
-        onChangeProp?: OnChangePropCallback<MD>,
-        onChangeReinit?: OnChangeReinitCallback<MD>,
+        onChangeProp?: OnChangePropCallback<MD | null>,
+        onChangeReinit?: OnChangeReinitCallback<MD | null>,
         listenReinit = true
     ) {
         const [data, _setData] = useProxyContext(
@@ -402,17 +401,13 @@ export default class MongoData<
         return this;
     }
 
-    removeProperty(name: Extract<keyof DataType, string>, allowMongoName = false) {
+    removeProperty(name: Extract<keyof DataType, string>) {
         if (!this.hasCustomProperty(name)) {
             throw new Error(`Property ${String(name)} does not exist.`);
         }
 
         this.properties = this.properties.filter(
-            (property) => (
-                property.name !== name
-                    &&
-                (allowMongoName || property.mongoName !== name)
-            )
+            (property) => property.name !== name
         );
         delete (this as any)[name];
         return this;
@@ -859,7 +854,7 @@ export default class MongoData<
         this.requestPromise = run;
         this.abortController = ac;
 
-        return this.requestPromise;
+        return this.requestPromise as Promise<ReturnType<Requests[K]>>;
     }
 
     hasLastRequest(type?: RequestTypeCondition<Requests>): boolean {

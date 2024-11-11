@@ -69,8 +69,8 @@ export default class TestData extends MongoData<TestDataType, TestMongoType, Tes
 
     static useContext(
         deps: Dependency<CompletedTestData>[] = TestData.defaultDependencies,
-        onChangeProp?: OnChangePropCallback<CompletedTestData>,
-        onChangeReinit?: OnChangeReinitCallback<CompletedTestData>
+        onChangeProp?: OnChangePropCallback<CompletedTestData | null>,
+        onChangeReinit?: OnChangeReinitCallback<CompletedTestData | null>
     ) {
         return MongoData._useContext<
             TestDataType, TestMongoType, TestRequests, CompletedTestData
@@ -87,7 +87,12 @@ export default class TestData extends MongoData<TestDataType, TestMongoType, Tes
     // adding the properties and request types in a fluent way.
     // constructors don't allow for different return types.
     static create() {
-        return new TestData() as CompletedTestData;
+        return (new TestData() as CompletedTestData).checkpoint("initial");
+    }
+
+    // Manually implement clone to ensure that the correct type is returned
+    clone() {
+        return super.clone() as CompletedTestData;
     }
 
     constructor() {
