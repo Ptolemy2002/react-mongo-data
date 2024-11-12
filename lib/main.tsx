@@ -817,15 +817,14 @@ export default class MongoData<
     request<K extends Extract<keyof Requests, string>>(
         id: K,
         ...args: Parameters<Requests[K]>
-    ): Promise<ReturnType<Requests[K]>> | MongoData<DataType, MongoType, Requests> {
+    ): Promise<ReturnType<Requests[K]>> {
         const request = this.findRequestType(id);
 
         if (this.hasInProgressRequest(id)) {
-            console.warn(
+            throw new Error(
                 `Attempted to start request ${id} while a request of the same type was `
-                + "already in progress. Ignoring..."
+                + "already in progress. This is not supported."
             );
-            return this;
         } else if (this.hasInProgressRequest()) {
             throw new Error(
                 `Attempted to start request ${id} while another request was in progress. `

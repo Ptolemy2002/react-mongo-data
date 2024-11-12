@@ -286,11 +286,11 @@ In addition, every time a property or requestType is defined, an object property
     - Arguments:
         - `id` (`Extract<keyof Requests, string>`): The id of the request type to be removed.
     - Returns: The same instance you called the method on.
-- `request<K extends Extract<keyof Requests, string>>` - Allows you to manually run the request with the specified id instead of directly calling the generated property's value. Throws an `Error` if the request type is not defined. If the request fails, any changes to the instance made during that request will be reverted.
+- `request<K extends Extract<keyof Requests, string>>` - Allows you to manually run the request with the specified id instead of directly calling the generated property's value. Throws an `Error` if the request type is not defined, or if a request is already in progress. If the request fails, any changes to the instance made during that request will be reverted.
     - Arguments:
         - `id` (`K`): The id of the request type to run.
         - `...args` (`Parameters<Requests[K]>`): The arguments to pass to the request type's `run` function. Note that one additional argument will always be provided, an `AbortController` instance for use with handling cancellation.
-    - Returns (`Promise<ReturnType<Requests[K]>> | MongoData<DataType, MongoType, Requests>`): A promise that will resolve when the request is complete or reject if the request fails. If the request isn't run due to another request being in progress, the instance itself will be returned instead.
+    - Returns (`Promise<ReturnType<Requests[K]>>`): A promise that will resolve when the request is complete or reject if the request fails.
 - `hasLastRequest` - Returns `true` if the last request was of the specified type, `false` otherwise.
     - Arguments:
         - `type` (`RequestTypeCondition<Requests>`): The type of request to check for. If `null` or `undefined`, the function will return `true` if any last request exists.
