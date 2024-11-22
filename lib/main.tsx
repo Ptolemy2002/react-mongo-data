@@ -58,6 +58,7 @@ export type Request<
 > =
     Requests[Id] extends ((...args: any[]) => Promise<infer ReturnType>) ? {
         id: Id,
+        undoOnFail: boolean,
         run: (ac: AbortController, ...args: Parameters<Requests[Id]>) => MaybePromise<ReturnType>,
         pre: (ac: AbortController, ...args: Parameters<Requests[Id]>) => MaybePromise<void>,
         post:
@@ -342,9 +343,10 @@ export default class MongoData<
         id: Id,
         run: Request<Requests, Id>["run"],
         {
+            undoOnFail = true,
             pre = async () => {},
             post = () => {}
-        }: Partial<Pick<Request<Requests, Id>, "pre" | "post">> = {}
+        }: Partial<Pick<Request<Requests, Id>, "pre" | "post" | "undoOnFail">> = {}
     ) {
         if (this.hasRequestType(id)) {
             throw new Error(`Request type ${String(id)} already exists.`);
@@ -352,6 +354,7 @@ export default class MongoData<
 
         this.requestTypes.push({
             id,
+            undoOnFail,
             run: async function (ac: AbortController, ...args: Parameters<Requests[Id]>) {
                 return run.call(this, ac, ...args);
             },
@@ -810,7 +813,7 @@ export default class MongoData<
         this.requestAborted = false;
         this.abortController = null;
         this.requestPromise = null;
-        this.revert("pre-" + type);
+        if (this.findRequestType(type).undoOnFail) this.revert("pre-" + type);
         return this;
     }
 
@@ -832,7 +835,7 @@ export default class MongoData<
             );
         }
 
-        this.checkpoint("pre-" + id);
+        if (request.undoOnFail) this.checkpoint("pre-" + id);
         const ac = new AbortController();
 
         let promiseResult: ReturnType<Requests[K]>;
