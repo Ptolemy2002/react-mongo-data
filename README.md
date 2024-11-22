@@ -72,6 +72,7 @@ type Request<
 > =
     Requests[Id] extends ((...args: any[]) => Promise<infer ReturnType>) ? {
         id: Id,
+        undoOnFail: boolean,
         run: (ac: AbortController, ...args: Parameters<Requests[Id]>) => MaybePromise<ReturnType>,
         pre: (ac: AbortController, ...args: Parameters<Requests[Id]>) => MaybePromise<void>,
         post:
@@ -278,7 +279,7 @@ In addition, every time a property or requestType is defined, an object property
     - Arguments:
         - `id` (`Id`): The id of the request type. This is what you will use to access the request type on the instance.
         - `run` (`Request<Requests, Id>["run"]`): A function that will be used to run the request. The function can take any number of arguments, but the first argument will always be an `AbortController` instance for use with handling cancellation.
-        - `args` (`Partial<Pick<Request<Requests, Id>, "pre" | "post">>`): Additional arguments
+        - `args` (`Partial<Pick<Request<Requests, Id>, "pre" | "post" | "undoOnFail">>`): Additional arguments
             - `pre` (`(ac: AbortController, ...args: Parameters<Requests[Id]>) => MaybePromise<void>`): A function that will be run before the request is made. The function can take any number of arguments, but the first argument will always be an `AbortController` instance for use with handling cancellation.
             - `post` (`(ac: AbortController, result: ReturnType, ...args: Parameters<Requests[Id]>) => MaybePromise<void>`): A function that will be run after the request is made. The function can take any number of arguments, but the first argument will always be an `AbortController` instance for use with handling cancellation.
     - Returns: The same instance you called the method on.
@@ -286,7 +287,7 @@ In addition, every time a property or requestType is defined, an object property
     - Arguments:
         - `id` (`Extract<keyof Requests, string>`): The id of the request type to be removed.
     - Returns: The same instance you called the method on.
-- `request<K extends Extract<keyof Requests, string>>` - Allows you to manually run the request with the specified id instead of directly calling the generated property's value. Throws an `Error` if the request type is not defined, or if a request is already in progress. If the request fails, any changes to the instance made during that request will be reverted.
+- `request<K extends Extract<keyof Requests, string>>` - Allows you to manually run the request with the specified id instead of directly calling the generated property's value. Throws an `Error` if the request type is not defined, or if a request is already in progress. If the request fails, any changes to the instance made during that request will be reverted. This can be prevented by setting the `undoOnFail` property of the request type to `false`.
     - Arguments:
         - `id` (`K`): The id of the request type to run.
         - `...args` (`Parameters<Requests[K]>`): The arguments to pass to the request type's `run` function. Note that one additional argument will always be provided, an `AbortController` instance for use with handling cancellation.
