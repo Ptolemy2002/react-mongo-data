@@ -26,7 +26,7 @@
     "@ptolemy2002/react-hook-result": "^2.2.1",
     "@ptolemy2002/react-proxy-context": "^2.0.1",
     "@ptolemy2002/react-utils": "^3.0.0",
-    "@ptolemy2002/ts-utils": "^1.0.0",
+    "@ptolemy2002/ts-utils": "^2.0.0",
     "is-callable": "^1.2.7",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
@@ -39,7 +39,7 @@
     "@ptolemy2002/react-proxy-context": "^2.0.1",
     "@ptolemy2002/react-utils": "^3.0.0",
     "@ptolemy2002/regex-utils": "^2.0.0",
-    "@ptolemy2002/ts-utils": "^1.0.0",
+    "@ptolemy2002/ts-utils": "^2.0.0",
     "@types/babel__generator": "^7.6.8",
     "@types/babel__template": "^7.4.4",
     "@types/babel__traverse": "^7.20.6",
