@@ -181,7 +181,7 @@ In addition, every time a property or requestType is defined, an object property
 - `updateProp<K extends Extract<keyof DataType, string>>` - Updates the value of a property. This is necessary with dates, lists, sets, and objects, because it will clone them, allowing the `ProxyContext` system to detect changes. Throws an `Error` if the property is not defined or is read-only while the `setReadOnly` flag is `false`.
     - Arguments:
         - `name` (`K`): The name of the property to be updated.
-        - `value` (`MaybeTransformer<DataType[K], [DataType[K]]> | ((value: DataType[K]) => void)`): Either the value to set or a function that will be used to update the value of the property. The function takes one argument, the cloned value of the property, and returns the updated value. If this function returns `undefined`, the value will simply be set to the clone, therefore you can use mutations to update in place insread of returning a new object if you wish.
+        - `value` (`MaybeTransformer<DataType[K], [DataType[K]]> | ((value: DataType[K]) => void)`): Either the value to set or a function that will be used to update the value of the property. The function takes one argument, the cloned value of the property, and returns the updated value. If this function returns `undefined`, the value will simply be set to the clone, therefore you can use mutations to update in place insread of returning a new object if you wish. Nested clonable values are also cloned during this operation.
         - `setReadOnly` (`boolean`): If `true`, the property will be set, even if it is read-only. If `false`, an `Error` will be thrown if the property is read-only. Defaults to `false`.
     - Returns: (`DataType[K]`) The updated value of the property.
 - `dataNameFromMongo` - Returns the name of the property in the instance that corresponds to the specified name in the MongoDB database.
@@ -194,7 +194,7 @@ In addition, every time a property or requestType is defined, an object property
         - `type` (`OptionalValueCondition<string>`): The type of checkpoint to compare against. If `null`, the last checkpoint will be used. The search will start from the current checkpoint. By default, this is `null`.
     - Returns:
         - `boolean` - `true` if any of the defined properties have been changed since the last checkpoint of the specified type, `false` otherwise. If the checkpoint is not found, the function will return `true`.
-- `toJSON` - Returns an object that represents the instance in JSON format. This will include all properties that have been defined and their values, converted with the `toMongo` functions.
+- `toJSON` - Returns an object that represents the instance in JSON format. This will include all properties that have been defined and their values, converted with the `toMongo` functions. The values will be cloned, so you don't have to do that yourself.
     - Arguments: None
     - Returns:
         - `MongoType` - An object that represents the instance in JSON format.

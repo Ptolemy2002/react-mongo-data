@@ -1,5 +1,5 @@
 import { loadExtension, ext_hasProperty } from "@ptolemy2002/js-utils";
-import { flattenKeys, listDifference, listsEqual, objectsEqual, objectDifference } from "@ptolemy2002/list-object-utils";
+import { flattenKeys, listDifference, listsEqual, objectsEqual, objectDifference, listClone, objectClone } from "@ptolemy2002/list-object-utils";
 import { MaybePromise, MaybeTransformer, PartialBy, ValueOf, ValueCondition, OptionalValueCondition, valueConditionMatches } from "@ptolemy2002/ts-utils";
 import {
     Dependency, useProxyContext, OnChangePropCallback, OnChangeReinitCallback,
@@ -475,20 +475,20 @@ export default class MongoData<
             
             let newValue: DataType[K];
             if (prev instanceof Set) {
-                newValue = new Set(prev) as DataType[K];
+                newValue = new Set(listClone([...prev])) as DataType[K];
             } else if (Array.isArray(prev)) {
-                newValue = [...prev] as DataType[K];
+                newValue = listClone(prev) as DataType[K];
             } else if (prev instanceof Date) {
                 newValue = new Date(prev) as DataType[K];
-            } else if (typeof prev === "object") {
-                newValue = { ...prev } as DataType[K];
+            } else if (typeof prev === "object" && prev !== null) {
+                newValue = objectClone(prev) as DataType[K];
             } else {
-                newValue = prev as DataType[K];
+                newValue = prev;
             }
 
             if (isCallable(value)) {
                 const result = value(newValue);
-                newValue = result === undefined ? newValue : result;
+                newValue = result ?? newValue;
             } else {
                 newValue = value;
             }
@@ -521,7 +521,17 @@ export default class MongoData<
     toJSON(): MongoType {
         return this.properties.reduce(
             (acc, property) => {
-                acc[property.mongoName] = property.toMongo(property.current);
+                const newValue = property.toMongo(property.current);
+                
+                if (Array.isArray(newValue)) {
+                    acc[property.mongoName] = listClone(newValue) as MongoType[Extract<keyof MongoType, string>];
+                } else if (typeof newValue === "object" && newValue !== null) {
+                    acc[property.mongoName] = objectClone(newValue);
+                } else if (newValue instanceof Set) {
+                    acc[property.mongoName] = listClone([...newValue]) as MongoType[Extract<keyof MongoType, string>];
+                } else {
+                    acc[property.mongoName] = newValue;
+                }
                 return acc;
             },
             {} as MongoType
