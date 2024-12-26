@@ -1,5 +1,5 @@
 import { loadExtension, ext_hasProperty } from "@ptolemy2002/js-utils";
-import { flattenKeys, listDifference, listsEqual, objectsEqual, objectDifference, listClone, objectClone } from "@ptolemy2002/list-object-utils";
+import { flattenKeys, listDifference, listsEqual, objectsEqual, objectDifference } from "@ptolemy2002/list-object-utils";
 import { MaybePromise, MaybeTransformer, PartialBy, ValueOf, ValueCondition, OptionalValueCondition, valueConditionMatches } from "@ptolemy2002/ts-utils";
 import {
     Dependency, useProxyContext, OnChangePropCallback, OnChangeReinitCallback,
@@ -10,6 +10,7 @@ import isCallable from "is-callable";
 import { ReactNode, MutableRefObject, useCallback, useImperativeHandle, useRef } from "react";
 import HookResult, { HookResultData } from "@ptolemy2002/react-hook-result";
 import { partialMemo } from "@ptolemy2002/react-utils";
+import cloneDeep from "lodash.clonedeep";
 
 loadExtension("hasProperty", ext_hasProperty, Object);
 
@@ -475,13 +476,13 @@ export default class MongoData<
             
             let newValue: DataType[K];
             if (prev instanceof Set) {
-                newValue = new Set(listClone([...prev])) as DataType[K];
+                newValue = new Set(cloneDeep(prev)) as DataType[K];
             } else if (Array.isArray(prev)) {
-                newValue = listClone(prev) as DataType[K];
+                newValue = cloneDeep(prev) as DataType[K];
             } else if (prev instanceof Date) {
                 newValue = new Date(prev) as DataType[K];
             } else if (typeof prev === "object" && prev !== null) {
-                newValue = objectClone(prev) as DataType[K];
+                newValue = cloneDeep(prev) as DataType[K];
             } else {
                 newValue = prev;
             }
@@ -524,11 +525,11 @@ export default class MongoData<
                 const newValue = property.toMongo(property.current);
                 
                 if (Array.isArray(newValue)) {
-                    acc[property.mongoName] = listClone(newValue) as MongoType[Extract<keyof MongoType, string>];
+                    acc[property.mongoName] = cloneDeep(newValue) as MongoType[Extract<keyof MongoType, string>];
                 } else if (typeof newValue === "object" && newValue !== null) {
-                    acc[property.mongoName] = objectClone(newValue);
+                    acc[property.mongoName] = cloneDeep(newValue) as MongoType[Extract<keyof MongoType, string>];
                 } else if (newValue instanceof Set) {
-                    acc[property.mongoName] = listClone([...newValue]) as MongoType[Extract<keyof MongoType, string>];
+                    acc[property.mongoName] = cloneDeep(newValue) as MongoType[Extract<keyof MongoType, string>];
                 } else {
                     acc[property.mongoName] = newValue;
                 }

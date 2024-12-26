@@ -325,12 +325,13 @@ In addition, every time a property or requestType is defined, an object property
 ## Peer Dependencies
 These should be installed in order to use the library, as npm does not automatically add peer dependencies to your project.
 - `@ptolemy2002/js-utils^3.0.2`
-- `@ptolemy2002/list-object-utils^2.0.0`
+- `@ptolemy2002/list-object-utils^3.0.0`
 - `@ptolemy2002/react-hook-result^2.2.1`
 - `@ptolemy2002/react-proxy-context^2.0.1`
 - `@ptolemy2002/react-utils^3.0.0`
 - `@ptolemy2002/ts-utils^2.0.0`
 - `is-callable^1.2.7`
+- `lodash.clonedeep^4.5.0`
 - `react^18.3.1`
 - `react-dom^18.3.1`
 

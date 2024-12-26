@@ -29,7 +29,7 @@ export default defineConfig({
         '@ptolemy2002/list-object-utils', '@ptolemy2002/react-hook-result',
         '@ptolemy2002/react-proxy-context', '@ptolemy2002/react-utils',
         '@ptolemy2002/ts-utils', '@ptolemy2002/regex-utils',
-        'is-callable', 'zod'
+        'lodash.clonedeep', 'is-callable', 'zod'
       ],
       output: {
         entryFileNames: '[name].js'
