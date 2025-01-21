@@ -223,7 +223,8 @@ export default class MongoData<
             );
         }, 
             ["children", "proxyRef"],
-            "MongoData.ProviderWrapper"
+            "MongoData.ProviderWrapper",
+            true
         );
     }
 
