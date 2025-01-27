@@ -170,8 +170,34 @@ export default class MongoData<
             } else {
                 _setData(value);
             }
-        }, [_setData]);
+        }, [_setData, dataClass]);
 
+        return new HookResult({data, set}, ["data", "set"]) as HookResultData<
+            {
+                data: typeof data, set: typeof set
+            },
+            readonly [typeof data, typeof set]
+        >;
+    }
+
+    protected static _useContextNonNullable<
+        DataType extends DataTypeRecord,
+        MongoType extends MongoTypeRecord,
+        Requests extends RequestRecord,
+        MD extends CompletedMongoData<DataType, MongoType, Requests> = CompletedMongoData<DataType, MongoType, Requests>
+    >(
+        context: ProxyContext<MD | null>,
+        dataClass: new () => MD,
+        deps: Dependency<MD>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD>[],
+        onChangeProp?: OnChangePropCallback<MD | null>,
+        onChangeReinit?: OnChangeReinitCallback<MD | null>,
+        listenReinit = true
+    ) {
+        const [data, set] = MongoData._useContext<DataType, MongoType, Requests, MD>(
+            context, dataClass, deps, onChangeProp, onChangeReinit, listenReinit
+        );
+
+        if (data === null) throw new Error(`Expected ${context.name} to be non-null, but it was null`);
         return new HookResult({data, set}, ["data", "set"]) as HookResultData<
             {
                 data: typeof data, set: typeof set

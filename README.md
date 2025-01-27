@@ -147,6 +147,9 @@ In addition, every time a property or requestType is defined, an object property
         - `onChangeReinit?` (`OnChangeReinitCallback<MD | null>`) - The `onChangeReinit` callback to pass to `useProxyContext`.
         - `listenReinit?` (`boolean`) - Whether to listen to full reassignments of the context and re-render when they occur. Default is `true`.
     - Returns: `HookResultData<{data: MD | null, set: (value: MD | Partial<MongoType> | null) => void}, readonly [MD | null, (value: MD | Partial<MongoType> | null) => void]>` - The result of the hook, containing the data and set function. The set function can be used to update the context with a new instance, `null`, or a partial object that will be merged with the default values of a new instance.
+- `_useContextNonNullable` - Variant of `useContext` that explicitly checks for a null value and throws an error if one is found.
+    - Arguments: Same as `_useContext`
+    - Returns: `HookResultData<{data: MD, set: (value: MD | Partial<MongoType> | null) => void}, readonly [MD, (value: MD | Partial<MongoType>) => void]>` - The result of the hook, containing the data and set function. The set function can be used to update the context with a new instance or a partial object that will be merged with the default values of a new instance.
 - `createProvider<DataType extends DataTypeRecord, MongoType extends MongoTypeRecord, Requests extends RequestRecord, MD extends CompletedMongoData<DataType, MongoType, Requests> = CompletedMongoData<DataType, MongoType, Requests>>` - Creates a provider component that provides an instance of the `MongoData` class to its children via [react-proxy-context](https://www.npmjs.com/package/@ptolemy2002/react-proxy-context).
     - Arguments:
         - `contextClass` (`ProxyContext<MD | null>`) - The class to use for the context.

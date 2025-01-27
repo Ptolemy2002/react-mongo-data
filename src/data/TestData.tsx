@@ -75,12 +75,30 @@ export default class TestData extends MongoData<TestDataType, TestMongoType, Tes
         return MongoData._useContext<
             TestDataType, TestMongoType, TestRequests, CompletedTestData
         >(
-            TestData.Context, // Helps us preserve values defined by this class itself
+            TestData.Context,
             TestData as unknown as new () => CompletedTestData,
             deps,
             onChangeProp,
             onChangeReinit
         )
+    }
+
+    static useContextNonNullable(
+        deps: Dependency<CompletedTestData>[] = TestData.defaultDependencies,
+        onChangeProp?: OnChangePropCallback<CompletedTestData | null>,
+        onChangeReinit?: OnChangeReinitCallback<CompletedTestData | null>
+    ) {
+        // We're expecting an error here because the type
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
+        return MongoData._useContextNonNullable<
+            TestDataType, TestMongoType, TestRequests, CompletedTestData
+        >(
+            TestData.Context,
+            TestData as unknown as new () => CompletedTestData,
+            deps,
+            onChangeProp,
+            onChangeReinit
+        );       
     }
 
     // We use this create method instead of a constructor to allow for
