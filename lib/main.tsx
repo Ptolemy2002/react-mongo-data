@@ -162,13 +162,13 @@ export default class MongoData<
         );
         const set = useCallback((value: MD | Partial<MongoType> | null) => {
             if (typeof value === "object" && value !== null && !(value instanceof MongoData)) {
-                _setData(
+                return _setData(
                     new dataClass()
                         .fromJSON(value, true)
                         .checkpoint("initial")
                 );
             } else {
-                _setData(value);
+                return _setData(value);
             }
         }, [_setData, dataClass]);
 
