@@ -148,14 +148,14 @@ export default class MongoData<
     >(
         context: ProxyContext<MD | null>,
         dataClass: new () => MD,
-        deps: Dependency<MD>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD | null>[],
+        deps: Dependency<MD | null>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD | null>[],
         onChangeProp?: OnChangePropCallback<MD | null>,
         onChangeReinit?: OnChangeReinitCallback<MD | null>,
         listenReinit = true
     ) {
         const [data, _setData] = useProxyContext(
             context,
-            deps as Dependency<MD | null>[],
+            deps,
             onChangeProp as OnChangePropCallback<MD | null>,
             onChangeReinit as OnChangeReinitCallback<MD | null>,
             listenReinit
@@ -188,7 +188,7 @@ export default class MongoData<
     >(
         context: ProxyContext<MD | null>,
         dataClass: new () => MD,
-        deps: Dependency<MD>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD>[],
+        deps: Dependency<MD | null>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD>[],
         onChangeProp?: OnChangePropCallback<MD | null>,
         onChangeReinit?: OnChangeReinitCallback<MD | null>,
         listenReinit = true
