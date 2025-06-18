@@ -623,11 +623,19 @@ export default class MongoData<
                         property.mongoName
                     ] = null as MongoType[Extract<keyof MongoType, string>];
                 } else if (Array.isArray(property.current) && Array.isArray(prevValue)) {
-                    const diff = flattenKeys(
+                    const _diff = flattenKeys(
                         listDifference(
                             property.toMongo(prevValue) as any[],
                             property.toMongo(property.get(property.current)) as any[]
                         )!
+                    )
+
+                    const diff: Record<string, SupportedMongoValue> = Object.keys(_diff).reduce(
+                        (acc, key) => {
+                            acc[property.mongoName + "." + key] = _diff[key as keyof Object];
+                            return acc;
+                        },
+                        {} as Record<string, SupportedMongoValue>
                     );
 
                     Object.entries(diff).forEach(([key, value]) => {
@@ -637,7 +645,10 @@ export default class MongoData<
                         }
                     });
 
-                    if (Object.keys(diff).length > 0) result.$set = {...result.$set, ...diff};
+                    if (Object.keys(diff).length > 0) result.$set = {
+                        ...result.$set,
+                        ...diff
+                    };
                 } else if (property.current instanceof Set && prevValue instanceof Set) {
                     const newValues: SupportedMongoValue[] = [];
                     const removedValues: SupportedMongoValue[] = [];
@@ -647,7 +658,7 @@ export default class MongoData<
 
                     currentArray.forEach((_, i) => {
                         if (!prevArray.some(v => MongoData.comparePropertyValues(property.get(property.current), v)))
-                            newValues.push(property.toMongo(currentArray[i] as DataType[Extract<keyof DataType, string>]));
+                            newValues.push((property.toMongo(property.current) as SupportedMongoValue[])[i]);
                     });
 
                     prevArray.forEach((value) => {
