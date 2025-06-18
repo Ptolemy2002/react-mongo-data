@@ -662,8 +662,8 @@ export default class MongoData<
                     });
 
                     prevArray.forEach((value) => {
-                        if (![...currentArray].some(v => MongoData.comparePropertyValues(v, value)))
-                            removedValues.push(property.toMongo(value));
+                        if (!(property.toMongo(property.current) as SupportedMongoValue[]).some(v => MongoData.comparePropertyValues(v, value)))
+                            removedValues.push(value as SupportedMongoValue);
                     });
 
                     if (newValues.length > 0) result.$push![property.mongoName] = {$each: newValues};
