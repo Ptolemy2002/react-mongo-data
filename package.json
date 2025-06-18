@@ -1,7 +1,7 @@
 {
   "name": "@ptolemy2002/react-mongo-data",
   "private": false,
-  "version": "2.5.3",
+  "version": "2.5.4",
   "type": "module",
   "repository": {
     "type": "git",
