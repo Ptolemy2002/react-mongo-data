@@ -34,12 +34,12 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.11.1",
-    "@ptolemy2002/js-utils": "^3.0.2",
-    "@ptolemy2002/list-object-utils": "^2.0.0",
-    "@ptolemy2002/react-hook-result": "^2.2.1",
-    "@ptolemy2002/react-proxy-context": "^2.0.1",
-    "@ptolemy2002/react-utils": "^3.0.0",
-    "@ptolemy2002/regex-utils": "^2.0.0",
+    "@ptolemy2002/js-utils": "^3.2.2",
+    "@ptolemy2002/list-object-utils": "^3.0.1",
+    "@ptolemy2002/react-hook-result": "^2.2.4",
+    "@ptolemy2002/react-proxy-context": "^2.3.5",
+    "@ptolemy2002/react-utils": "^3.8.0",
+    "@ptolemy2002/regex-utils": "^3.0.0",
     "@ptolemy2002/ts-utils": "^3.0.0",
     "@types/babel__generator": "^7.6.8",
     "@types/babel__template": "^7.4.4",
@@ -68,7 +68,7 @@
     "typescript-eslint": "^8.7.0",
     "vite": "^5.4.8",
     "vite-plugin-dts": "^4.2.3",
-    "zod": "^3.23.8"
+    "zod": "^4.0.0"
   },
   "exports": {
     ".": {
