@@ -657,7 +657,7 @@ export default class MongoData<
                     const prevArray = [...prevValue];
 
                     currentArray.forEach((_, i) => {
-                        if (!prevArray.some(v => MongoData.comparePropertyValues(property.get(property.current), v)))
+                        if (!prevArray.some(v => MongoData.comparePropertyValues(currentArray[i], v)))
                             newValues.push((property.toMongo(property.current) as SupportedMongoValue[])[i]);
                     });
 
