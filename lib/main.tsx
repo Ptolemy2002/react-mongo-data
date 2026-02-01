@@ -1,3 +1,11 @@
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/require-await */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+/* eslint-disable @typescript-eslint/consistent-indexed-object-style */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { loadExtension, ext_hasProperty } from "@ptolemy2002/js-utils";
 import { flattenKeys, listDifference, listsEqual, objectsEqual, objectDifference } from "@ptolemy2002/list-object-utils";
 import { MaybePromise, MaybeTransformer, PartialBy, ValueOf, ValueCondition, OptionalValueCondition, valueConditionMatches } from "@ptolemy2002/ts-utils";
@@ -156,8 +164,8 @@ export default class MongoData<
         const [data, _setData] = useProxyContext(
             context,
             deps,
-            onChangeProp as OnChangePropCallback<MD | null>,
-            onChangeReinit as OnChangeReinitCallback<MD | null>,
+            onChangeProp,
+            onChangeReinit,
             listenReinit
         );
         const set = useCallback((value: MD | Partial<MongoType> | null) => {
@@ -230,15 +238,15 @@ export default class MongoData<
 
             if (valueRef.current === undefined) {
                 if (typeof value === "object" && value !== null && !(value instanceof MongoData)) {
-                    valueRef.current = new dataClass().fromJSON(value, true).checkpoint("initial") as MD;
+                    valueRef.current = new dataClass().fromJSON(value, true).checkpoint("initial");
                 } else {
-                    valueRef.current = value as MD;
+                    valueRef.current = value;
                 }
             }
 
             return (
                 <Provider
-                    value={valueRef.current!}
+                    value={valueRef.current}
                     onChangeProp={onChangeProp}
                     onChangeReinit={onChangeReinit}
                     proxyRef={valueRef as MutableRefObject<MD | null>}
@@ -289,12 +297,12 @@ export default class MongoData<
         return this.requestTypes.find((requestType) => requestType.id === id) as Request<Requests, Id>;
     }
 
-    public static comparePropertyValues<T extends SupportedDataValue>(a: T, b: T): boolean {
+    public static comparePropertyValues<T extends SupportedDataValue>(this: void, a: T, b: T): boolean {
         if (a === null || b === null) return a === b;
 
         if (a instanceof Set && b instanceof Set) {
             if (a.size !== b.size) return false;
-            return Array.from(a).every((value) => b.has(value));
+            return Array.from(a).every((value: SupportedDataValue) => b.has(value));
         } else if (Array.isArray(a) && Array.isArray(b)) {
             return listsEqual(a, b);
         } else if (a instanceof Date && b instanceof Date) {
@@ -388,7 +396,7 @@ export default class MongoData<
             },
 
             pre: async function (ac: AbortController, ...args: Parameters<Requests[Id]>) {
-                pre.call(this, ac, ...args);
+                await pre.call(this, ac, ...args);
             },
 
             post: async function (
@@ -396,7 +404,7 @@ export default class MongoData<
                 result: ReturnType<Requests[Id]>,
                 ...args: Parameters<Requests[Id]>
             ) {
-                post.call(this, ac, result, ...args);
+                await post.call(this, ac, result, ...args);
             }
         } as unknown as Request<Requests, Id>);
 
@@ -423,6 +431,7 @@ export default class MongoData<
 
     removeRequestType(id: Extract<keyof Requests, string>) {
         if (!this.hasRequestType(id))
+            // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
             throw new Error(`Request Type ${id} is not defined.`);
         
         this.requestTypes = this.requestTypes.filter(
@@ -448,7 +457,7 @@ export default class MongoData<
         name: K
     ): DataType[K] {
         const property = this.findProperty(name);
-        return property.get(property!.current);
+        return property.get(property.current);
     }
 
     propSet<K extends Extract<keyof DataType, string>>(
@@ -537,7 +546,7 @@ export default class MongoData<
             throw new Error(`Property with mongo name ${String(name)} does not exist.`);
         }
 
-        return property.name as Extract<keyof DataType, string>;
+        return property.name;
     }
 
     isDirty(type: OptionalValueCondition<string> = null) {
@@ -573,6 +582,7 @@ export default class MongoData<
             for (const [key, value] of Object.entries(data)) {
                 const name = this.dataNameFromMongo(key as Extract<keyof MongoType, string>);
                 this._setReadOnly = true;
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
                 (this as any)[name] = this.findProperty(name).fromMongo(value);
             }
         } finally {
@@ -607,7 +617,7 @@ export default class MongoData<
             if (!previous) throw new Error("No previous data to compare to.");
         }
 
-        let result: Difference = {
+        const result: Difference = {
             $set: {},
             $unset: {},
             $push: {},
@@ -632,7 +642,7 @@ export default class MongoData<
 
                     const diff: Record<string, SupportedMongoValue> = Object.keys(_diff).reduce(
                         (acc, key) => {
-                            acc[property.mongoName + "." + key] = _diff[key as keyof Object];
+                            acc[property.mongoName + "." + key] = _diff[key as keyof object];
                             return acc;
                         },
                         {} as Record<string, SupportedMongoValue>
@@ -641,7 +651,7 @@ export default class MongoData<
                     Object.entries(diff).forEach(([key, value]) => {
                         if (value === undefined) {
                             result.$unset![key] = "";
-                            delete diff[key as keyof Object];
+                            delete diff[key as keyof object];
                         }
                     });
 
@@ -677,13 +687,13 @@ export default class MongoData<
                         objectDifference(
                             property.toMongo(prevValue) as any,
                             property.toMongo(property.current) as any
-                        )!
+                        )
                     );
 
                     Object.entries(diff).forEach(([key, value]) => {
                         if (value === undefined) {
                             result.$unset![key] = "";
-                            delete diff[key as keyof Object];
+                            delete diff[key as keyof object];
                         }
                     });
 
@@ -707,7 +717,7 @@ export default class MongoData<
         return this.checkpoints[this.checkpointIndex] ?? null;
     }
 
-    checkpoint(type: string ="manual") {
+    checkpoint(type="manual") {
         if (this.checkpointIndex < this.checkpoints.length - 1) {
             this.checkpoints = this.checkpoints.slice(0, this.checkpointIndex + 1);
         }
@@ -789,7 +799,7 @@ export default class MongoData<
         return count;
     }
 
-    undo(steps: number = 1, type: OptionalValueCondition<string> = null) {
+    undo(steps = 1, type: OptionalValueCondition<string> = null) {
         if (this.countCheckpoints(type, {max: this.checkpointIndex}) === 0) return this;
         const initialDirty = this.isDirty();
 
@@ -810,7 +820,7 @@ export default class MongoData<
         return this;
     }
 
-    redo(steps: number = 1, type: OptionalValueCondition<string> = null) {
+    redo(steps=1, type: OptionalValueCondition<string> = null) {
         if (this.countCheckpoints(type, {min: this.checkpointIndex + 1}) === 0) return this;
 
         let index = this.checkpointIndex;
@@ -832,6 +842,7 @@ export default class MongoData<
     }
 
     clone() {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-call
         return new (this.constructor as any)().fromJSON(this.toJSON(), true).checkpoint("initial");
     }
 
@@ -900,7 +911,7 @@ export default class MongoData<
                 this._requestFailed(err, id);
                 throw err;
             })
-            .finally(() => request.post.call(this, ac, promiseResult, ...args));
+            .finally(() => { void request.post.call(this, ac, promiseResult, ...args); });
         
         this.requestPromise = run;
         this.abortController = ac;
