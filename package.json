@@ -12,7 +12,7 @@
     "build": "tsc -b ./tsconfig.lib.json && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "postinstall": "npx typesync",
+    "prepare": "npx typesync",
     "uninstall": "bash ./scripts/uninstall.sh",
     "reinstall": "bash ./scripts/reinstall.sh",
     "release": "bash ./scripts/release.sh",
