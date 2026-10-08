@@ -156,7 +156,7 @@ export default class MongoData<
     >(
         context: ProxyContext<MD | null>,
         dataClass: new () => MD,
-        deps: Dependency<MD | null>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD | null>[],
+        deps: Dependency<MD | null>[] | null = MongoData._defaultDependencies,
         onChangeProp?: OnChangePropCallback<MD | null>,
         onChangeReinit?: OnChangeReinitCallback<MD | null>,
         listenReinit = true
@@ -164,8 +164,8 @@ export default class MongoData<
         const [data, _setData] = useProxyContext(
             context,
             deps,
-            onChangeProp,
-            onChangeReinit,
+            onChangeProp ?? (() => {}),
+            onChangeReinit ?? (() => {}),
             listenReinit
         );
         const set = useCallback((value: MD | Partial<MongoType> | null) => {
@@ -196,7 +196,7 @@ export default class MongoData<
     >(
         context: ProxyContext<MD | null>,
         dataClass: new () => MD,
-        deps: Dependency<MD | null>[] | null = MongoData._defaultDependencies as unknown as Dependency<MD>[],
+        deps: Dependency<MD | null>[] | null = MongoData._defaultDependencies,
         onChangeProp?: OnChangePropCallback<MD | null>,
         onChangeReinit?: OnChangeReinitCallback<MD | null>,
         listenReinit = true
@@ -518,7 +518,7 @@ export default class MongoData<
             } else if (prev instanceof Date) {
                 newValue = new Date(prev) as DataType[K];
             } else if (typeof prev === "object" && prev !== null) {
-                newValue = cloneDeep(prev) as DataType[K];
+                newValue = cloneDeep(prev);
             } else {
                 newValue = prev;
             }
@@ -563,7 +563,7 @@ export default class MongoData<
                 if (Array.isArray(newValue)) {
                     acc[property.mongoName] = cloneDeep(newValue) as MongoType[Extract<keyof MongoType, string>];
                 } else if (typeof newValue === "object" && newValue !== null) {
-                    acc[property.mongoName] = cloneDeep(newValue) as MongoType[Extract<keyof MongoType, string>];
+                    acc[property.mongoName] = cloneDeep(newValue);
                 } else if (newValue instanceof Set) {
                     acc[property.mongoName] = cloneDeep(newValue) as MongoType[Extract<keyof MongoType, string>];
                 } else {
@@ -631,7 +631,7 @@ export default class MongoData<
                 if (property.get(property.current) === null) {
                     if (prevValue !== null) result.$set![
                         property.mongoName
-                    ] = null as MongoType[Extract<keyof MongoType, string>];
+                    ] = null;
                 } else if (Array.isArray(property.current) && Array.isArray(prevValue)) {
                     const _diff = flattenKeys(
                         listDifference(
